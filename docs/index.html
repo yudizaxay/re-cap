@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>re:cap – Record meetings, get the notes</title>
+<meta name="description" content="re:cap is a free Chrome extension that records Google Meet, Teams and Zoom calls in your browser and turns them into a transcript, an AI summary and action items. No account, no servers.">
+<meta property="og:title" content="re:cap – Record meetings, get the notes">
+<meta property="og:description" content="Free Chrome extension. Record a call, get the transcript, summary and action items. Your recordings stay on your machine.">
+<meta property="og:image" content="screenshot-meeting.png">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#071a46; --ink-2:#2a3558; --muted:#5a5d8d; --line:#e3e5f3; --bg:#f7f8ff; --white:#fff;
+  --indigo:#3641ed; --violet:#8644f1; --blue:#0072fa; --cyan:#1cd5c9; --pink:#ab49f8;
+  --grad:linear-gradient(135deg,#3641ed 0%,#8644f1 35%,#087eff 68%,#1cd5c9 100%);
+  --radius:20px;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{overflow-x:clip;font-family:"Nunito",system-ui,sans-serif;color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:6px}
+.wrap{width:calc(100% - 40px);max-width:1120px;margin-left:auto;margin-right:auto}
+h1,h2,h3{font-weight:900;letter-spacing:-.02em;line-height:1.08}
+h2{font-size:clamp(30px,4.4vw,48px);max-width:18ch}
+.lead{font-size:clamp(17px,2vw,20px);color:var(--ink-2);max-width:52ch}
+
+/* nav */
+header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;gap:28px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:900;font-size:26px;letter-spacing:-.04em}
+.brand img{width:34px;height:34px}
+.brand i{font-style:normal;color:var(--blue)}
+nav .links{margin-left:auto;display:flex;gap:26px;font-weight:600;font-size:15px}
+nav .links a{text-decoration:none;color:var(--ink-2)}
+nav .links a:hover{color:var(--indigo)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:999px;font-weight:800;font-size:16px;text-decoration:none;border:2px solid transparent;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--ink);color:#fff;box-shadow:0 8px 24px -8px rgba(7,26,70,.55)}
+.btn-ghost{border-color:var(--line);background:#fff}
+.btn-ghost:hover{border-color:var(--indigo)}
+.btn-sm{padding:9px 18px;font-size:14px}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:72px 0 0;background:
+  radial-gradient(900px 420px at 85% -10%,rgba(28,213,201,.28),transparent 60%),
+  radial-gradient(800px 460px at 0% 0%,rgba(134,68,241,.18),transparent 60%),var(--bg)}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:48px;align-items:center}
+.hero h1{font-size:clamp(38px,5vw,64px);margin-bottom:22px}
+.hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin:30px 0 18px}
+.fine{font-size:14px;color:var(--muted);font-weight:600}
+
+.demo{position:relative;padding-bottom:70px}
+.rec{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 10px;font-weight:800;font-size:13px;box-shadow:0 6px 20px -10px rgba(7,26,70,.4)}
+.rec b{width:10px;height:10px;border-radius:50%;background:#ef2d4a;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 30px 60px -30px rgba(7,26,70,.35)}
+.transcript{margin-top:14px;padding:22px;display:grid;gap:14px;min-height:262px;padding-bottom:70px;align-content:start}
+.line{display:grid;grid-template-columns:48px 1fr;gap:12px;font-size:15px;opacity:0;transform:translateY(6px);animation:in .5s forwards}
+.line time{font-weight:800;color:var(--indigo);font-size:13px;padding-top:2px}
+.line:nth-child(1){animation-delay:.4s}.line:nth-child(2){animation-delay:1.6s}.line:nth-child(3){animation-delay:2.8s}.line:nth-child(4){animation-delay:4s}
+@keyframes in{to{opacity:1;transform:none}}
+.todo{position:absolute;right:-8px;bottom:0;width:min(290px,80%);padding:16px 18px;background:var(--ink);color:#fff;border-radius:var(--radius);box-shadow:0 24px 50px -20px rgba(7,26,70,.7);opacity:0;animation:in .6s 5.2s forwards}
+.todo h3{font-size:14px;margin-bottom:8px;color:var(--cyan)}
+.todo ul{padding:0}
+.todo li{list-style:none;font-size:14px;padding-left:24px;position:relative;margin-top:5px}
+.todo li::before{content:"";position:absolute;left:0;top:5px;width:14px;height:14px;border-radius:5px;border:2px solid var(--cyan)}
+.shot{margin-top:64px;border-radius:var(--radius) var(--radius) 0 0;border:1px solid var(--line);border-bottom:0;box-shadow:0 -10px 60px -30px rgba(7,26,70,.4);overflow:hidden;background:#fff}
+
+/* sections */
+section{padding:104px 0}
+.sec-head{margin-bottom:48px;display:grid;gap:14px}
+
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.tile{padding:28px;border-radius:var(--radius);background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.tile h3{font-size:21px}
+.tile p{color:var(--ink-2);font-size:16px}
+.tile svg{width:30px;height:30px;stroke:var(--indigo);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.t-a{grid-column:span 4;background:var(--grad);color:#fff;border:0;min-height:230px;justify-content:flex-end}
+.t-a p,.t-a h3{color:#fff}.t-a p{opacity:.92;max-width:44ch}.t-a svg{stroke:#fff}
+.t-b{grid-column:span 2}.t-c{grid-column:span 2}.t-d{grid-column:span 2}.t-e{grid-column:span 2}
+.t-f{grid-column:span 3;background:#fff}.t-g{grid-column:span 3;background:#fff}
+.t-h{grid-column:span 2;background:#fff}.t-i{grid-column:span 2;background:#fff}.t-j{grid-column:span 2;background:#fff}
+
+/* steps */
+.steps{background:var(--bg)}
+.steps ol{list-style:none;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:28px;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding-top:64px}
+.steps li::before{content:counter(s);position:absolute;top:0;left:0;width:48px;height:48px;border-radius:16px;background:var(--grad);color:#fff;font-weight:900;font-size:22px;display:grid;place-items:center}
+.steps li:not(:last-child)::after{content:"";position:absolute;top:23px;left:64px;right:-14px;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px)}
+.steps h3{font-size:22px;margin-bottom:6px}
+.steps p{color:var(--ink-2)}
+
+/* privacy band */
+.band{background:var(--ink);color:#fff;position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;width:560px;height:560px;right:0;top:-200px;border-radius:50%;background:var(--grad);opacity:.35;filter:blur(70px)}
+.band .wrap{position:relative;display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+.band .lead{color:#c8d0ee}
+.facts{display:grid;gap:14px}
+.fact{display:flex;gap:16px;padding:18px 20px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12)}
+.fact svg{flex:none;width:26px;height:26px;stroke:var(--cyan);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-top:2px}
+.fact b{display:block;font-weight:800}
+.fact span{color:#c8d0ee;font-size:15px}
+
+/* providers */
+.prov{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.prov .tile{background:#fff}
+.tag{align-self:flex-start;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;background:rgba(28,213,201,.18);color:#08766f}
+.tag.paid{background:rgba(134,68,241,.14);color:#5b21b6}
+.tag.any{background:rgba(0,114,250,.12);color:#0457b8}
+
+/* faq */
+.faq{max-width:760px}
+details{border-bottom:1px solid var(--line);padding:20px 0}
+summary{cursor:pointer;font-weight:800;font-size:19px;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:26px;line-height:1;color:var(--indigo);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{margin-top:10px;color:var(--ink-2)}
+
+/* final cta + footer */
+.final{padding:0 0 104px}
+.final .box{border-radius:32px;padding:72px 32px;text-align:center;color:#fff;background:var(--grad);display:grid;gap:22px;justify-items:center}
+.final h2{max-width:16ch}
+.final .btn-primary{background:#fff;color:var(--ink)}
+footer{border-top:1px solid var(--line);padding:36px 0;font-size:14px;color:var(--muted)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:center}
+footer .brand{font-size:22px;color:var(--ink)}
+footer .brand img{width:28px;height:28px}
+footer .r{margin-left:auto;display:flex;gap:22px;flex-wrap:wrap}
+footer a{text-decoration:none;font-weight:600}footer a:hover{color:var(--indigo)}
+
+@media (max-width:900px){
+  nav .links{display:none}nav .btn{margin-left:auto}
+  .hero-grid,.band .wrap{grid-template-columns:minmax(0,1fr)}
+  .bento{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .t-a{grid-column:span 2}.t-b,.t-c,.t-d,.t-e,.t-f,.t-g,.t-h,.t-i,.t-j{grid-column:span 1}
+  .steps ol{grid-template-columns:1fr}.steps li:not(:last-child)::after{display:none}
+  .prov{grid-template-columns:1fr 1fr}
+  section{padding:72px 0}
+}
+@media (max-width:560px){
+  .bento,.prov{grid-template-columns:1fr}.t-a,.t-b,.t-c,.t-d,.t-e,.t-f,.t-g,.t-h,.t-i,.t-j{grid-column:auto}
+  .todo{position:relative;right:auto;margin:14px 0 0;width:100%}
+  footer .r{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-delay:0s!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt=""><span>re<i>:</i>cap</span></a>
+      <div class="links">
+        <a href="#features">Features</a><a href="#how">How it works</a><a href="#privacy">Privacy</a><a href="#ai">AI providers</a><a href="#faq">FAQ</a>
+      </div>
+      <a class="btn btn-primary btn-sm" href="https://github.com/yudizaxay/re-cap#install">Get re:cap</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <h1>Record the call.<br><span>Keep the notes.</span></h1>
+        <p class="lead">re:cap records Google Meet, Teams and Zoom in your browser, then writes the transcript, a summary and your action items. Free for life, no account, no servers.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://github.com/yudizaxay/re-cap#install">Add to Chrome</a>
+          <a class="btn btn-ghost" href="https://github.com/yudizaxay/re-cap">View on GitHub</a>
+        </div>
+        <p class="fine">Open source (MIT). Needs Chrome 116 or newer.</p>
+      </div>
+
+      <div class="demo" aria-label="Example of a live transcript and action items">
+        <span class="rec"><b></b>Recording (re:cap)</span>
+        <div class="card transcript">
+          <div class="line"><time>00:12</time><span>Let's lock the launch for the 14th, as long as QA signs off on Friday.</span></div>
+          <div class="line"><time>00:41</time><span>Priya, can you send the updated pricing page to legal today?</span></div>
+          <div class="line"><time>01:08</time><span>Yes, I'll share it by 5 and flag the two open clauses.</span></div>
+          <div class="line"><time>01:35</time><span>Great. Sam will confirm the demo environment before the weekend.</span></div>
+        </div>
+        <div class="todo">
+          <h3>Action items</h3>
+          <ul>
+            <li>Priya: pricing page to legal by 5 pm</li>
+            <li>Sam: confirm demo environment</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="shot">
+      <img src="screenshot-meeting.png" width="1440" height="813" alt="re:cap meeting page with the video, summary and action items">
+    </div>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Everything from the call, none of the typing</h2>
+      <p class="lead">Press Start before the meeting. re:cap handles the rest and keeps it on your computer.</p>
+    </div>
+    <div class="bento">
+      <div class="tile t-a">
+        <svg viewBox="0 0 24 24"><rect x="3" y="5" width="13" height="14" rx="3"/><path d="M16 10l5-3v10l-5-3"/></svg>
+        <h3>Video and audio, together with your mic</h3>
+        <p>Record the meeting tab, or your whole screen or one window. Tab audio and your microphone are mixed into one recording you can play back any time.</p>
+      </div>
+      <div class="tile t-b">
+        <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h14"/></svg>
+        <h3>Timestamped transcript</h3>
+        <p>Click any line and the video jumps to that moment.</p>
+      </div>
+      <div class="tile t-c">
+        <svg viewBox="0 0 24 24"><path d="M12 3l1.8 4.7L18.5 9.5l-4.7 1.8L12 16l-1.8-4.7L5.5 9.5l4.7-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg>
+        <h3>AI notes</h3>
+        <p>Summary, key points, decisions, action items and open questions.</p>
+      </div>
+      <div class="tile t-d">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
+        <h3>Stops by itself</h3>
+        <p>On Google Meet, recording ends with the call and the meeting opens in a new tab.</p>
+      </div>
+      <div class="tile t-e">
+        <svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>
+        <h3>Tells everyone</h3>
+        <p>Posts a recording notice in the Meet chat. Edit the text or turn it off.</p>
+      </div>
+      <div class="tile t-f">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 3 14.7 0 18M12 3c-3 3.3-3 14.7 0 18"/></svg>
+        <h3>Any language</h3>
+        <p>Pick the meeting language, such as Hindi, English or German, for a transcript that reads right.</p>
+      </div>
+      <div class="tile t-g">
+        <svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></svg>
+        <h3>Import, export and download</h3>
+        <p>Back up every meeting as plain files, or save a single recording (.webm) or its notes (Markdown).</p>
+      </div>
+      <div class="tile t-h">
+        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>
+        <h3>Stays on your machine</h3>
+        <p>Recordings live in your browser. re:cap has no servers.</p>
+      </div>
+      <div class="tile t-i">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <h3>Long meetings are fine</h3>
+        <p>Audio is split into 20-minute parts so transcription never hits upload limits.</p>
+      </div>
+      <div class="tile t-j">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18M7 8c0-2 2-3 5-3s5 1 5 3-2 3-5 3-5 1-5 3 2 4 5 4 5-1 5-3"/></svg>
+        <h3>Free for life</h3>
+        <p>No subscription, no ads. A free Groq key is enough.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="steps">
+  <div class="wrap">
+    <div class="sec-head"><h2>Three clicks from call to notes</h2></div>
+    <ol>
+      <li><h3>Start</h3><p>Open your meeting, click the re:cap icon, choose the video source and press Start.</p></li>
+      <li><h3>Talk</h3><p>Join the call as usual. A red Recording pill shows on the page, and the call chat gets a notice.</p></li>
+      <li><h3>Read</h3><p>When the call ends, your transcript, summary and action items are ready in a new tab.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section id="privacy" class="band">
+  <div class="wrap">
+    <div>
+      <h2>Your meetings are not our business</h2>
+      <p class="lead" style="margin-top:16px">re:cap has no account and no server. Audio and text go only to the AI provider you pick, with your own key.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div><b>Recordings stay in your browser</b><span>Stored locally. Export them whenever you like.</span></div></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><div><b>You choose the AI</b><span>Groq, Gemini, OpenAI, Claude or your own server.</span></div></div>
+      <div class="fact"><svg viewBox="0 0 24 24"><path d="M9 8l-5 4 5 4M15 8l5 4-5 4"/></svg><div><b>Open source</b><span>Plain JavaScript, no build step. Read every line.</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="ai">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>Bring your own AI</h2>
+      <p class="lead">Start free with one Groq key, or switch provider in Settings whenever you like.</p>
+    </div>
+    <div class="prov">
+      <div class="tile"><span class="tag">Free</span><h3>Groq</h3><p>Whisper for the transcript and a large open model for the notes. One key, no card.</p></div>
+      <div class="tile"><span class="tag">Free</span><h3>Groq + Gemini</h3><p>Groq transcribes, Gemini writes the summary. Both have free tiers.</p></div>
+      <div class="tile"><span class="tag paid">Paid</span><h3>OpenAI + Claude</h3><p>Whisper for the transcript and Claude for the best-written notes.</p></div>
+      <div class="tile"><span class="tag any">Anything</span><h3>Custom server</h3><p>Point re:cap at any OpenAI-compatible endpoint, including one on your own machine.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>Questions</h2></div>
+    <div class="faq">
+      <details><summary>Is it really free?</summary><p>Yes. re:cap has no subscription and no ads. You use your own API key, and Groq offers one for free without a credit card.</p></details>
+      <details><summary>Which meeting apps work?</summary><p>Google Meet has the most support, including auto-stop and the chat notice. Teams, Zoom (web) and any other site open in a browser tab can be recorded too, and you press Stop yourself.</p></details>
+      <details><summary>Do the other people know they are recorded?</summary><p>On Google Meet, re:cap posts a notice in the call chat from your account. On other sites, please tell participants yourself. You are responsible for recording only where you have permission.</p></details>
+      <details><summary>Where are my recordings stored?</summary><p>In your browser's storage on your computer. Clearing browser data or removing the extension deletes them, so use Export to keep a copy.</p></details>
+      <details><summary>Does it work with the Zoom or Teams desktop app?</summary><p>Whole-screen mode records the picture, but on macOS the other side's voice is not captured. Browser tabs carry call audio, so use the web version for best results.</p></details>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap">
+    <div class="box">
+      <h2>Never take meeting notes again</h2>
+      <p class="lead" style="color:#fff;opacity:.92">Install re:cap, add a free key and press Start on your next call.</p>
+      <a class="btn btn-primary" href="https://github.com/yudizaxay/re-cap#install">Add to Chrome</a>
+    </div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo-mark.svg" alt=""><span>re<i>:</i>cap</span></a>
+    <span>© 2026 Akshay Singh. MIT licensed.</span>
+    <div class="r">
+      <a href="https://github.com/yudizaxay/re-cap">GitHub</a>
+      <a href="https://github.com/yudizaxay/re-cap/blob/main/PRIVACY.md">Privacy policy</a>
+      <a href="https://github.com/sponsors/yudizaxay">Sponsor</a>
+      <a href="https://axaysingh.com">axaysingh.com</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

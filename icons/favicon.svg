@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="30 37 280 280">
+  <defs>
+    <linearGradient id="bubble" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#3641ED"/><stop offset=".35" stop-color="#8644F1"/><stop offset=".67" stop-color="#087EFF"/><stop offset="1" stop-color="#1CD5C9"/></linearGradient>
+    <linearGradient id="dot" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#AB49F8"/><stop offset="1" stop-color="#3041E9"/></linearGradient>
+    <linearGradient id="lens" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#0072FA"/><stop offset="1" stop-color="#20D4CE"/></linearGradient>
+  </defs>
+  <path d="M96 58 H201 C238 58 266 85 266 121 V201 C266 239 235 266 198 266 H113 L68 290 Q55 297 58 281 L68 248 C54 235 47 215 47 194 V108 C47 80 68 58 96 58Z" fill="url(#bubble)"/>
+  <circle cx="150" cy="160" r="72" fill="#FFFFFF"/>
+  <circle cx="150" cy="160" r="35" fill="url(#dot)"/>
+  <path d="M242 134 L279 112 Q293 102 293 121 V199 Q293 217 279 207 L242 185 Q232 180 232 169 V150 Q232 140 242 134Z" fill="url(#lens)" stroke="#FFFFFF" stroke-width="10" stroke-linejoin="round"/>
+</svg>

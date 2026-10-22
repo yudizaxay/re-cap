@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>re:cap</title><link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="popup.css"></head>
+<body>
+  <div class="brand"><img src="icons/logo-mark.svg" alt=""><span>re:cap</span></div>
+
+  <section id="idle" hidden>
+    <p id="where" class="muted"></p>
+    <div id="consent-box" class="notice" hidden>
+      <b>Before you record</b>
+      <p>re:cap records the audio of the tab you choose (and its video or your screen, if you select that) plus your microphone. Recordings are stored only in this browser.</p>
+      <p>To make a transcript, the audio is sent to the AI provider you pick in Settings (Groq, OpenAI, Google Gemini or your own server). The transcript text is then sent to your summary provider (Groq, Anthropic or Google). re:cap has no servers and never receives your data.</p>
+      <p>On Google Meet, re:cap posts a notice in the call chat so everyone knows. Elsewhere, tell everyone yourself.</p>
+      <button id="agree" class="primary">I understand and agree</button>
+    </div>
+    <label class="field gated">Video
+      <select id="source">
+        <option value="tab">This tab only</option>
+        <option value="screen">Entire screen or a window…</option>
+        <option value="none">None (audio only)</option>
+      </select>
+    </label>
+    <button id="start" class="primary gated" disabled>Start recording this tab</button>
+    <p class="muted small gated">Tell everyone on the call you are recording. A notice is posted in the Meet chat (you can turn that off in Settings), and a red badge shows on your screen. On Meet, recording stops by itself when the call ends.</p>
+    <p id="mic-warn" class="warn" hidden>Your microphone isn't allowed yet, so only other participants will be recorded. <a href="#" id="grant">Allow microphone</a></p>
+    <p id="error" class="error"></p>
+  </section>
+
+  <section id="live" hidden>
+    <p class="rec"><span class="dot"></span> Recording <b id="timer">00:00</b></p>
+    <button id="stop" class="primary">Stop &amp; process</button>
+  </section>
+
+  <a href="#" id="open" class="link">Open meetings &amp; settings</a>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

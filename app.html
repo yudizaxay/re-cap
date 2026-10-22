@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>re:cap</title><link rel="icon" href="icons/favicon.svg" type="image/svg+xml"><link rel="icon" href="icons/icon-32.png" sizes="32x32" type="image/png"><link rel="stylesheet" href="app.css"></head>
+<body>
+  <aside>
+    <a class="brand" href="#" id="home" aria-label="re:cap home"><img src="icons/logo-mark.svg" alt=""><span>re:cap</span></a>
+    <div class="side-label">Meetings</div>
+    <ul id="list"></ul>
+    <div class="side-foot">
+      <p id="io-status" class="muted small" hidden></p>
+      <div class="io">
+        <button id="import" class="ghost sm">Import</button>
+        <button id="export-all" class="ghost sm">Export all</button>
+      </div>
+      <button id="open-settings" class="ghost">Settings &amp; About</button>
+    </div>
+  </aside>
+  <main>
+    <section id="empty" class="hero">
+      <div class="hero-logo"><img src="icons/logo-mark.svg" alt=""></div>
+      <h1 class="hero-name">re:cap</h1>
+      <p class="hero-tag">Record your calls on Google Meet, Microsoft Teams, Zoom and more. Get the transcript, the notes and the action items.</p>
+      <div class="steps">
+        <div class="step"><b>1</b><h4>Open your meeting</h4><p>Google Meet, Teams or Zoom in a browser tab. Any meeting site works.</p></div>
+        <div class="step"><b>2</b><h4>Click the re:cap icon</h4><p>Choose this tab or your whole screen, then press Start. On Google Meet it stops by itself when the call ends.</p></div>
+        <div class="step"><b>3</b><h4>Get your recap</h4><p>The recording, transcript and summary open here when the call ends.</p></div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn" href="https://meet.google.com/" target="_blank">Open Google Meet</a>
+        <button id="import-2" class="ghost">Import meetings</button>
+      </div>
+      <div class="apps">
+        <span class="apps-label">Works with</span>
+        <ul>
+          <li><i style="background:#00832d"></i>Google Meet</li>
+          <li><i style="background:#5b5fc7"></i>Microsoft Teams</li>
+          <li><i style="background:#0b5cff"></i>Zoom</li>
+          <li><i style="background:#049fd9"></i>Webex</li>
+          <li><i style="background:#4a154b"></i>Slack huddles</li>
+          <li><i style="background:#8a8fb5"></i>Any meeting in a browser tab</li>
+        </ul>
+        <p class="apps-note">Using a desktop app? Pick “Entire screen or a window” to record it (the other side's voice is captured only from browser tabs).</p>
+      </div>
+      <div class="features">
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16c5 0 7-8 12-8a4 4 0 0 1 0 8c-5 0-7-8-12-8a4 4 0 1 0 0 8"/></svg></span><h4>Free for life</h4><p>No account, no subscription, no ads. Just bring your own free API key.</p></div>
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><h4>Stays on your machine</h4><p>Recordings are stored in your browser. re:cap has no servers to leak from.</p></div>
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></span><h4>Import &amp; export</h4><p>Back up every meeting as plain files, and bring them back any time.</p></div>
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg></span><h4>Download anything</h4><p>Save the video, the transcript or the notes from the ⋯ menu of any meeting.</p></div>
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></svg></span><h4>Video + audio</h4><p>Record the tab or your whole screen, along with your microphone.</p></div>
+        <div class="feat"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></svg></span><h4>Transcript &amp; AI notes</h4><p>Summary, decisions and action items, with timestamps that jump the video.</p></div>
+      </div>
+    </section>
+    <section id="detail" hidden>
+      <header class="d-head">
+        <input id="title" aria-label="Meeting title">
+        <div class="actions">
+          <button id="reprocess" class="primary sm">Process again</button>
+          <details class="menu" id="menu">
+            <summary aria-label="More actions">⋯</summary>
+            <div class="menu-pop">
+              <button id="copy">Copy current tab</button>
+              <button id="download">Download notes (.md)</button>
+              <button id="download-media">Save recording (.webm)</button>
+              <button id="export-one">Export this meeting (folder)</button>
+              <button id="delete" class="danger">Delete meeting</button>
+            </div>
+          </details>
+        </div>
+      </header>
+      <p id="meta" class="meta"></p>
+      <div id="status" class="banner" hidden><span id="status-text"></span><button id="status-action" class="sm" hidden></button></div>
+      <div class="cols">
+        <div class="left"><div id="player"></div></div>
+        <div class="right">
+          <div class="tabs"><button data-tab="summary" class="active">Summary</button><button data-tab="transcript">Transcript</button></div>
+          <article id="content"></article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="confirm" class="small">
+    <form method="dialog">
+      <div class="confirm-icon" id="confirm-icon"></div>
+      <h3 id="confirm-title"></h3>
+      <p id="confirm-text" class="muted"></p>
+      <div class="row end">
+        <button value="cancel" class="ghost" id="confirm-cancel">Cancel</button>
+        <button value="ok" id="confirm-ok" class="primary"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <div class="dtabs">
+        <button type="button" data-pane="settings" class="active">Settings</button>
+        <button type="button" data-pane="about">About</button>
+      </div>
+      <div id="pane-settings" class="pane">
+
+      <label>AI provider
+        <select id="provider">
+          <option value="groq">Groq: free (recommended)</option>
+          <option value="gemini">Groq transcript + Gemini summary: both free</option>
+          <option value="paid">OpenAI + Anthropic: paid</option>
+          <option value="custom">Custom (advanced)</option>
+        </select>
+      </label>
+
+      <div data-panel="groq" class="panel">
+        <label>Groq API key <input id="g-key" type="password" autocomplete="off" placeholder="gsk_..."></label>
+        <p class="muted">Free, no card. Get a key at <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a>. It does the transcript and the summary.</p>
+      </div>
+
+      <div data-panel="gemini" class="panel" hidden>
+        <label>Groq API key <small>(transcript)</small><input id="m-gkey" type="password" autocomplete="off" placeholder="gsk_..."></label>
+        <label>Gemini API key <small>(summary)</small><input id="m-mkey" type="password" autocomplete="off" placeholder="AIza..."></label>
+        <p class="muted">Free Gemini key: <a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>. On Google's free tier, prompts may be used to improve their products, so avoid confidential calls.</p>
+      </div>
+
+      <div data-panel="paid" class="panel" hidden>
+        <label>OpenAI API key <small>(transcript)</small><input id="p-okey" type="password" autocomplete="off" placeholder="sk-..."></label>
+        <label>Anthropic API key <small>(summary)</small><input id="p-akey" type="password" autocomplete="off" placeholder="sk-ant-..."></label>
+      </div>
+
+      <div data-panel="custom" class="panel" hidden>
+        <label>Transcription API key<input id="c-tkey" type="password" autocomplete="off"></label>
+        <label>Transcription base URL<input id="c-turl"></label>
+        <label>Transcription model<input id="c-tmodel"></label>
+        <label>Summary base URL <small>(OpenAI-compatible; blank = Anthropic)</small><input id="c-surl"></label>
+        <label>Summary model<input id="c-smodel"></label>
+        <label>Summary API key <small>(blank = reuse transcription key)</small><input id="c-skey" type="password" autocomplete="off"></label>
+        <label>Anthropic API key <small>(only if summary URL is blank)</small><input id="c-akey" type="password" autocomplete="off"></label>
+      </div>
+
+      <label>Meeting language <small>(set this for better accuracy; blank = auto-detect)</small><input id="lang" list="langs" placeholder="auto-detect"></label>
+      <datalist id="langs">
+        <option value="en" label="English"></option><option value="hi" label="Hindi / Hinglish"></option><option value="gu" label="Gujarati"></option>
+        <option value="mr" label="Marathi"></option><option value="bn" label="Bengali"></option><option value="ta" label="Tamil"></option>
+        <option value="te" label="Telugu"></option><option value="ur" label="Urdu"></option><option value="de" label="German"></option>
+        <option value="es" label="Spanish"></option><option value="fr" label="French"></option><option value="pt" label="Portuguese"></option>
+        <option value="ar" label="Arabic"></option><option value="ja" label="Japanese"></option>
+      </datalist>
+
+      <label class="check"><input type="checkbox" id="announce"> <span>Post a recording notice in the Meet chat<small>Recommended. Lets everyone on the call know it is being recorded.</small></span></label>
+
+      <label>Chat notice text <small>(posted in the Meet chat when recording starts; blank = default)</small>
+        <textarea id="notice" rows="3" placeholder="Heads up: I'm recording this meeting and creating an AI transcript and summary (re:cap). If you'd rather not be recorded, please tell me now."></textarea>
+      </label>
+
+      <div class="row"><button type="button" id="mic" class="ghost">Allow microphone</button><span id="mic-state" class="muted"></span></div>
+      <p class="muted">Keys stay in this browser profile and are sent only to your chosen provider.</p>
+      </div>
+
+      <div id="pane-about" class="pane" hidden>
+        <div class="about">
+          <img src="icons/logo-mark.svg" class="about-logo" alt="">
+          <h3>re:cap <small id="ver"></small></h3>
+          <p class="muted">Record Google Meet calls, then get the transcript, summary and action items. Recordings stay in this browser unless you export them.</p>
+          <div class="links" id="links">
+            <a id="l-site" target="_blank" hidden>Website</a>
+            <a id="l-github" target="_blank" hidden>GitHub</a>
+            <a id="l-repo" target="_blank" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Star the project</a>
+            <a id="l-email" hidden>Email</a>
+            <a id="l-sponsor" class="sponsor" target="_blank" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg> Sponsor</a>
+          </div>
+          <a id="sp-card" class="sp-card" target="_blank" hidden>
+            <img id="sp-avatar" alt="">
+            <div class="sp-text"><b id="sp-title"></b><p id="sp-bio"></p></div>
+            <span class="sp-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg> Sponsor</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="row end" id="settings-actions"><button value="cancel" class="ghost">Cancel</button><button id="save" value="ok" class="primary">Save</button></div>
+      <div class="row end" id="about-actions" hidden><button value="cancel" class="primary">Close</button></div>
+    </form>
+  </dialog>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

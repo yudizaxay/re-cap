@@ -1,0 +1,30 @@
+* { box-sizing: border-box; margin: 0; font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; }
+body { width: 320px; padding: 16px; display: grid; gap: 12px; color: #000852; }
+h1 { font-size: 18px; color: #000082; letter-spacing: -0.03em; }
+section { display: grid; gap: 12px; }
+.muted { color: #5a5d8d; font-size: 13px; line-height: 1.4; }
+.consent { font-size: 13px; display: flex; gap: 8px; align-items: flex-start; }
+button { font: 600 14px inherit; font-family: inherit; padding: 11px 14px; border-radius: 12px; border: 0; cursor: pointer; }
+button.primary { background: #1d1dff; color: #fff; }
+button:disabled { opacity: .45; cursor: default; }
+.rec { display: flex; gap: 8px; align-items: center; font-size: 15px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: #e5342d; animation: p 1.2s infinite; }
+@keyframes p { 50% { opacity: .3; } }
+.warn { font-size: 12px; background: #fff7e0; padding: 8px 10px; border-radius: 10px; line-height: 1.4; }
+.error { color: #c0262d; font-size: 13px; }
+.link { font-size: 13px; color: #1d1dff; text-decoration: none; }
+[hidden] { display: none !important; }
+
+.brand { display: flex; align-items: center; gap: 8px; }
+.brand img { width: 28px; height: 28px; }
+.brand span { font-family: ui-rounded, 'SF Pro Rounded', Nunito, system-ui, sans-serif; font-weight: 900; font-size: 22px; letter-spacing: -0.04em; color: #071A46; }
+.small { font-size: 12px; }
+.auto { padding-top: 10px; border-top: 1px solid #eceeff; }
+.auto small { color: #5a5d8d; font-size: 12px; }
+.sub { padding-left: 24px; }
+.sub small { color: #5a5d8d; font-size: 12px; }
+.field { display: grid; gap: 4px; font-size: 13px; font-weight: 600; }
+select { font: 500 14px inherit; font-family: inherit; padding: 9px 10px; border: 1px solid #e5e6f0; border-radius: 10px; background: #fff; color: #000852; }
+.notice { display: grid; gap: 8px; background: #f7f8ff; border: 1px solid #e0e3ff; border-radius: 14px; padding: 14px; font-size: 12.5px; line-height: 1.5; color: #000852; }
+.notice b { font-size: 14px; color: #000082; }
+.notice p { margin: 0; color: #5a5d8d; }
